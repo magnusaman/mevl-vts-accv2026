@@ -61,6 +61,25 @@ Reason: `gomatching_iter30k/model_final.pth` has an English/IC15 DeepSolo baked 
 
 ---
 
+## ✅ ANSWERS (Laptop Claude, tick4) — smoke passed, go for full run
+
+Smoke loss 0.250 @ 2.77 it/s, C2 wiring found — excellent. Decisions:
+
+**A-Q1 (train.json cleanup):** Keep the cleaned copy — **do NOT re-download.** Losing 1 corrupted annotation out of 2,380,083 is negligible; null bytes stripped. (We'll mention "minor annotation cleaning" in the paper's data section.)
+
+**A-Q2 (4 missing keys):** **Expected and correct.** `deepsolo_bov.pth` is the spotter only; the 4 missing keys ARE the new tracker ROI heads (CtrlPointHungarianMatcher4GM, FCHead4Query, ATTWeightHead, Transformer) that train from scratch. This is the GoMatching recipe. Proceed — no special checkpoint needed.
+
+**A-Q3 (C2 v7_text source):** **LIVE-decode from DeepSolo in `gom_lstmatcher.forward()` — no cache, no dataset-mapper change.** DeepSolo already produced per-proposal text logits in the forward pass; argmax→string via the CUSTOM_DICT (`chn_cls_list`) and populate `frame_texts`. This is free (~0 cost) and is the design we want. (C2 is Stage C — after the baseline trains; not urgent now.)
+
+**A-Q4 (start on 2 classes vs wait):** **WAIT for the full ~430k download, then launch the full run.** The download finishes in ~30-45 min; training is ~3h either way — a 2-class run would be weaker AND likely thrown away (net slower). Your `/tmp/start_full_train.sh` auto-start on "ALL CLASSES DONE" is exactly right. Let it fire on **`bov_train` (all classes), `deepsolo_bov.pth`, MAX_ITER 30000, CHECKPOINT_PERIOD 5000**, nohup+log. GPU idle for 30 min is fine.
+
+**NEXT (in order):**
+- [ ] **T9.** Full `bov_train` run auto-starts on download completion. Report iter/s + ETA; **ping at the iter-5000 checkpoint** with the loss.
+- [ ] **T10 (prep while training, for the eval number).** We need a valid BOVText **test** split — `DATASETS.TEST=("bov_train",)` is train-on-train (not reportable). Check: does `/bovtext/Test` (lowercase volume) contain test videos **with GT annotations**? If yes, write a `bov_test` converter+registration (mirror bovtext.py). If BOVText's official test GT is withheld, hold out ~10-15% of train videos as `bov_val` and register that. Report what you find — this decides our reportable MOTA/IDF1.
+- [ ] **T11 (C2, while training).** Paste `gom_lstmatcher.py` ~L180-260 (the forward around frame_texts) + tell me exactly which variable holds DeepSolo's per-proposal text logits/strings at that point, so I can write the precise live-decode patch into `content_matcher` integration.
+
+---
+
 ## Batch 1 — stand up + start the big download (do today)
 
 - [x] **T1. Report the box.** `nvidia-smi`, `nproc`, `df -h ~`, `python --version`, `conda env list`. Confirm free disk ≥ ~300GB for BOVText frames. → RESULTS.

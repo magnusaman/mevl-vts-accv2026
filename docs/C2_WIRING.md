@@ -27,7 +27,17 @@ Goal: make recognized text a **gated identity term** in the LST-Matcher associat
 - Chinese text: ensure decoded strings are comparable (normalize width/case for Latin; keep CJK as-is). `rapidfuzz` handles unicode.
 - Cost: per-frame decode is already done by DeepSolo; consensus vote is O(track len). Negligible vs the spotter.
 
-## Status
-- [ ] Box: locate exact similarity tensor + M/N order in `shared_ffn_crsattn.py`.
-- [ ] Laptop: provide the edited association hook once the box confirms the tensor shapes/order.
-- [ ] Smoke: 20-iter run with `CONTENT_ON True` must equal baseline at init (gate≈0), no shape errors.
+## Status — UPDATED tick4 (box confirmed wiring already exists)
+Box audit (2026-06-29): the C2 hook is **already in the code**, init-safe.
+- Hook: `shared_ffn_crsattn.py:379-404` wraps each asso_output `[M×N]` with `v7_content_matcher`.
+- Order CONFIRMED: **M = query dets (rows), N = key dets (cols)**; `base_sim[i,j]` = sim(query i, key j).
+- `frame_texts` consumed in `gom_lstmatcher.py:259` from `batched_inputs["v7_text"]`.
+- Gate `content_logit=-6` → sigmoid≈0 → baseline reproduced at init. ✓
+- **Only missing piece:** nobody populates `v7_text`.
+
+**Decision (Laptop, tick4): populate `v7_text` by LIVE-decoding DeepSolo in `gom_lstmatcher.forward()`** — no cache, no dataset-mapper change. DeepSolo already ran its recognition head in the same forward; take per-proposal text logits → argmax → string via `chn_cls_list` (CUSTOM_DICT) → set `frame_texts`. ~0 extra cost.
+
+- [x] Box: located tensor + M/N order. ✓
+- [ ] Box: paste `gom_lstmatcher.py` ~L180-260 + name the variable holding DeepSolo per-proposal text logits/strings at the forward point (T11).
+- [ ] Laptop: write the live-decode patch from that snippet.
+- [ ] Smoke: 20-iter with C2 on must equal baseline at init (gate≈0), no shape errors. (C2 is Stage C — after baseline tracker trains.)
