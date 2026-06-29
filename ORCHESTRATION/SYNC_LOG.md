@@ -24,3 +24,4 @@ Both Claudes run a ~10-minute loop. The repo is the only channel (no SSH). Aman 
 - [box] 2026-06-29T14:05Z T10 DONE (test GT exists: 480vids/32cls, convert_bovtext_test.py written); T11 DONE (live-decode patch spec in RESULTS); bov_test registered in vts.py.
 - [box] 2026-06-29T14:10Z status: iter 2720/30k (5k ckpt ~14:21); Cls11 51% (Cls12-18=0, ETA 2-3h); test video 75%.
 - [box] 2026-06-29T14:17Z 5k ckpt saved (total_loss=0.00047, 304MB); test video extracted; frame conv running; Cls11 81%.
+- [box] 2026-06-29T14:30Z iter 6120/30k; Cls11 97% (~2min); test extraction 110k+ frames; full download ETA ~19:30 UTC.

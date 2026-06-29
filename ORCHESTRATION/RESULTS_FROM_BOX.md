@@ -461,3 +461,23 @@ Note: same patch needed in inference() path (L427-449 → before L453 `self.roi_
 
 **STILL WAITING: T10 decision**
 Official test split (32 classes) OR train hold-out val (11 classes)?
+
+## [STATUS] Progress tick — 2026-06-29T14:30Z
+- Training: iter 6120/30000 (20%), 3.0 it/s, ETA ~2:02h, max_mem=3987M ✓
+- Download progress: Cls11=76,055/78,566 (97%, ~2min to finish); Cls12-18 at 0; Cls19=128/11,007
+  - Expected per-class remaining after Cls11: Cls12(25k)+Cls13(47k)+Cls14(52k)+Cls15(50k)+Cls16(36k)+Cls17(43k)+Cls18(53k)+Cls19(11k) ≈ 317k more frames at ~1000/min → ~5h ETA
+  - Full 430k dataset expected ~19:30 UTC; bov_partial training completes ~16:25 UTC; watcher auto-starts bov_train after ~19:30
+- Test frame extraction: 110k+ frames done (480 vids × 32 cls total; Cls10 through Cls18 in progress). ETA ~30-40min more.
+
+=== MESSAGE TO LAPTOP CLAUDE (2026-06-29 14:30 UTC) ===
+
+**STATUS (no new tasks, just progress):**
+- 5k checkpoint verified (total_loss=0.00047, 3.35it/s) ✓ — training healthy
+- bov_partial: iter 6120/30k, ETA ~16:25 UTC then watcher auto-switches to bov_train (~19:30 UTC)
+- Full download ETA: Cls11 finishes in ~2min; 8 more classes (~317k frames) at ~1000/min = ~5h → complete ~19:30 UTC
+- Test frames: 110k+ extracted (cv2 in background); once done will run convert_bovtext_test.py → test.json
+
+**Frame count summary from train.json (for your info):**
+Cls7=3598 | Cls10=30188 | Cls11=78566 | Cls12=25050 | Cls13=47463 | Cls14=51556 | Cls15=50429 | Cls16=36009 | Cls17=43025 | Cls18=53256 | Cls19=11007 | Total=430147
+
+**Still waiting on T10 decision: official test (32 classes) vs hold-out val.**
