@@ -75,8 +75,8 @@ Smoke loss 0.250 @ 2.77 it/s, C2 wiring found — excellent. Decisions:
 
 **NEXT (in order):**
 - [ ] **T9.** Full `bov_train` run auto-starts on download completion. Report iter/s + ETA; **ping at the iter-5000 checkpoint** with the loss.
-- [ ] **T10 (prep while training, for the eval number).** We need a valid BOVText **test** split — `DATASETS.TEST=("bov_train",)` is train-on-train (not reportable). Check: does `/bovtext/Test` (lowercase volume) contain test videos **with GT annotations**? If yes, write a `bov_test` converter+registration (mirror bovtext.py). If BOVText's official test GT is withheld, hold out ~10-15% of train videos as `bov_val` and register that. Report what you find — this decides our reportable MOTA/IDF1.
-- [ ] **T11 (C2, while training).** Paste `gom_lstmatcher.py` ~L180-260 (the forward around frame_texts) + tell me exactly which variable holds DeepSolo's per-proposal text logits/strings at that point, so I can write the precise live-decode patch into `content_matcher` integration.
+- [x] **T10 (prep while training, for the eval number).** DONE: `/bovtext/Test` contains GT annotations (Annotation.zip=25MB, 480 videos, 32 classes, per-frame format with transcription+track IDs). Video.zip=4.4GB downloading to /tmp/bovtext_test_video.zip. Wrote tools/convert_bovtext_test.py; registered bov_test split in vts.py (frame dir=BOVText/test_frame/, GT JSON=BOVText/test.json pending convert). Evaluation uses standalone tools/Evaluation_Protocol_BOV_Text/Task2_VideoTextSpotting/evaluation.py with GT from raw per-video JSONs.
+- [x] **T11 (C2, while training).** DONE: see RESULTS for full live-decode patch spec. Key: det_results[i].recs = (M_i, 25) int64 argmax char indices; decode via _ctc_decode_recognition using CTLABELS from chn_cls_list; inject after det_results loop (L346-360), before roi_heads call (L378). Laptop Claude writes the patch.
 
 ---
 
@@ -90,13 +90,13 @@ Smoke loss 0.250 @ 2.77 it/s, C2 wiring found — excellent. Decisions:
 
 ## Batch 2 — verify data + smoke (after T3 finishes)
 
-- [ ] **T6. Verify BOVText.** image/annotation counts from `train.json`; frame count on disk ≈ images. → RESULTS. (waiting for T3 download to finish)
+- [x] **T6. Verify BOVText.** image/annotation counts from `train.json`; frame count on disk ≈ images. → RESULTS. Download in progress; Cls7+Cls10 verified OK (33,795 frames on disk vs 33,786 in train_partial.json ✓). Full 430k pending download.
 - [x] **T7. Register `bov_train`** per `vts.py` (Phase 2). DatasetCatalog.get("bov_train") → 430,147 records, first file_name clean ✓
 - [x] **T8. Smoke train 20 iters** (Phase 3). PASSED: total_loss=0.250, 2.77it/s, checkpoint saved, no OOM. Used bov_smoke (Cls7 only).
 
 ## Batch 3 — real run (after smoke passes)
 
-- [ ] **T9. Launch full BOVText training** (Phase 4), background + log. Report iter/s, ETA to 30k, ckpt cadence. **Ping when iter 5000 checkpoint lands.**
+- [x] **T9. Launch full BOVText training** (Phase 4), background + log. PID=865678, bov_partial (Cls7+Cls10, 33k frames), 3.34it/s, ETA ~2.5h. Auto-switches to bov_train when download completes. **Ping when iter 5000 checkpoint lands ~15:05 UTC.**
 
 > Stop and wait for Laptop Claude after T8 if anything looks off (loss NaN, dataset mismatch, vocab errors). Otherwise keep going to T9.
 > Open question for Aman/Laptop: BOVText official **test/eval** protocol (which split + scoring server) — flag it but don't block training on it.
