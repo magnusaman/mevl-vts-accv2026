@@ -1,0 +1,21 @@
+_BASE_: "GoMatching_PP_ICDAR15.yaml"
+# Multi-dataset spotting training, per Prof. Shiva: train on all spotting sets.
+# Base GoMatching++ recipe (frozen DeepSolo + trainable LST/association heads).
+# v7 DenseTrack comps (Comp1/2/3) are LEFT OFF here on purpose: they require
+# precomputed sam/encoder/vlm caches that only exist for IC15-V — caching them
+# over BOVText's ~1.75M frames is infeasible. v7 stays the IC15-V ablation.
+MODEL:
+  # warm-start from the reproduced GoMatching++ iter-30k (already a good tracker),
+  # then continue across all three spotting datasets.
+  WEIGHTS: "pretrained_models/model_final.pth"
+SOLVER:
+  MAX_ITER: 60000           # larger combined corpus (IC15 + DSText + BOVText)
+  BASE_LR: 0.00005
+  CHECKPOINT_PERIOD: 5000
+DATASETS:
+  TRAIN: ("icdar15_train", "dstext_train", "bov_train")
+  TEST: ("icdar15_train",)
+DATALOADER:
+  SAMPLER_TRAIN: "MultiDatasetSampler"   # required when >1 TRAIN dataset
+  DATASET_RATIO: [1, 1, 1]               # equal sampling across the 3 datasets
+OUTPUT_DIR: "./trained_models/GoMPP_MultiTrain/"

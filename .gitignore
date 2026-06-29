@@ -1,0 +1,76 @@
+# ============================================================
+#  PUBLIC REPO — keep it CODE-ONLY. Never commit data/weights/secrets.
+# ============================================================
+
+# ---- secrets (CRITICAL: this is a public repo) ----
+.env
+.env.*
+*.key
+*token*
+*secret*
+credentials*
+*.pem
+modal.toml
+.netrc
+
+# ---- model weights / checkpoints ----
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+*.onnx
+*.bin
+*.pkl
+pretrained_models/
+trained_models/
+checkpoints/
+
+# ---- datasets / frames / videos ----
+datasets/
+data/
+**/frame/
+*.mp4
+*.avi
+*.jpg
+*.jpeg
+*.png
+*.gif
+
+# ---- big manifests / annotations ----
+*.jsonl
+*.lmdb
+
+# ---- outputs / logs ----
+outputs/
+output/
+runs/
+logs/
+*.log
+wandb/
+events.out.*
+
+# ---- python caches ----
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.ipynb_checkpoints/
+build/
+dist/
+
+# ---- the archive of the old project (must never be pushed) ----
+/Old/
+Old/
+
+# ---- editor / os ----
+.vscode/
+.idea/
+.DS_Store
+
+# ---- scratch / old session helpers (may contain credentials) ----
+**/NEXT_SESSION.md
+**/_remote_*.sh
+**/_rrc_*
+**/_gdown_*.sh
+**/_watch_and_launch.sh
+**/_inspect_track.py

@@ -1,0 +1,24 @@
+_BASE_: "GoMatching_PP_ICDAR15.yaml"
+MODEL:
+  WEIGHTS: "pretrained_models/model_final.pth"  # warm-start from reproduced iter-30k
+  DENSETRACK:
+    ENABLED: True
+    COMP1_ENABLED: True   # SAM-augmented proposal recall
+    COMP1_CACHE_ROOT: "/data/sam_cache"  # offline: tools/cache_sam_proposals.py
+    COMP1_CLIP_DIM: 768           # open_clip ViT-L/14-336 PROJECTED dim, not raw hidden
+    COMP1_HIDDEN_DIM: 256
+    COMP1_MAX_PER_FRAME: 50
+    COMP2_ENABLED: True   # multi-encoder consensus matcher
+    COMP2_CACHE_ROOT: "/data/encoder_cache"  # offline: tools/cache_encoder_features.py
+    COMP2_ENCODERS: ["clip-l-336", "dinov2-l", "convnext-l"]
+    COMP2_ENCODER_DIMS: [1024, 1024, 1536]
+    COMP2_PROJ_DIM: 256
+    COMP3_ENABLED: True   # VLM content matching
+    COMP3_TEXT_CACHE_ROOT: "/data/vlm_text_cache"  # offline: tools/cache_vlm_text.py
+    COMP3_USE_MLP_FUSION: True
+    GATE_WARMUP_ITERS: 1000  # all gates frozen at init for first N iters
+SOLVER:
+  MAX_ITER: 12000              # fine-tune from converged baseline (not 30k)
+  BASE_LR: 0.00002             # 2e-5: lower because warm-start
+  CHECKPOINT_PERIOD: 1000
+OUTPUT_DIR: "./trained_models/DenseTrack_IC15/"
