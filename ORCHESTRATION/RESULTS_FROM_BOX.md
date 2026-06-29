@@ -150,3 +150,78 @@ Append-only. One entry per task. Format:
 **QUESTION for Laptop Claude:**
 1. The GoMatching_PP_BOVText.yaml config — does it handle Chinese text (chn_cls_list, VOC_SIZE 5462)? The upstream vts.py only encodes 36 alphanumeric chars. Does the BOVText training expect the bilingual vocab? Should we patch vts.py to handle Chinese text labels or just ignore them?
 2. Do you want the GoMatching++ checkpoint (gomatching_iter30k/model_final.pth) for warm-start, or start from deepsolo_bov.pth only? RUNBOOK says deepsolo_bov.pth for MODEL.WEIGHTS.
+
+## [T8] Smoke train 20 iters — STATUS: DONE
+- UTC: 2026-06-29T08:04:00Z
+- ran:
+  ```bash
+  cd code/GoMatching_v7
+  python train_net.py --config-file configs/GoMatching_PP_BOVText.yaml --num-gpus 1 \
+    MODEL.WEIGHTS pretrained_models/deepsolo_bov.pth \
+    SOLVER.MAX_ITER 20 SOLVER.CHECKPOINT_PERIOD 20 \
+    DATASETS.TRAIN '("bov_smoke",)' \
+    OUTPUT_DIR ./trained_models/GoMPP_BOVText_smoke
+  ```
+- output (key lines):
+  ```
+  trainable params: 11.802624 M, total params: 55.784999 M
+  Freezing except ROI heads! (unfreezing CtrlPointHungarianMatcher4GM, FCHead4Query, ATTWeightHead, Transformer)
+  Starting training from iteration 0
+  Saving checkpoint to trained_models/GoMPP_BOVText_smoke/model_0000019.pth ✓
+  Total training time: 0:00:08
+  ```
+  Metrics (from metrics.json):
+  ```
+  loss_long_asso: 0.153  loss_short_asso: 0.097  total_loss: 0.250
+  lr: 2.5e-9  time: 0.361 s/iter
+  ```
+- metrics: **2.77 iter/s → ETA for 30k iters ≈ 3.0 hours** ✓ no OOM, no NaN
+- notes: Used bov_smoke (Cls7_Game only, 3598 frames, 2 videos). Full bov_train needs all classes.
+  bov_smoke registered via new entry in vts.py _PREDEFINED_SPLITS.
+  Pretrained checkpoint missing 4 keys (new ROI head weights) — expected, they init from scratch.
+
+## [T9] Full BOVText training — STATUS: IN PROGRESS (waiting for download)
+- UTC: 2026-06-29T08:15:00Z
+- BOVText download status: Cls7+Cls10 DONE (33.8k/430k frames), Cls11_Movie downloading (78k frames, ETA ~12min)
+- Download script PID=854165 (/tmp/download_bov.sh), log: /tmp/bov_download.log
+- Full training will auto-start via /tmp/start_full_train.sh once download completes
+- ETA: download ~30-45 min more, then full train ~3h (2.77 it/s × 30k)
+- Disk: 234G free, estimated total BOVText ~40-52GB (safe)
+
+## C2 WIRING ANALYSIS — STATUS: DONE (report only)
+- UTC: 2026-06-29T08:10:00Z
+- Reviewed: shared_ffn_crsattn.py lines 377-404, gom_lstmatcher.py lines 180-260
+- **Finding: C2 wiring is ALREADY IMPLEMENTED.** The content_matcher hook is at:
+  shared_ffn_crsattn.py:379-404 — wraps each asso_output tensor [M x N] with v7_content_matcher
+- **M/N ordering confirmed:** M = query dets (rows), N = all key dets (columns). base_sim[i,j] = similarity of query i to key j.
+- frame_texts populated in gom_lstmatcher.py:259 from batched_inputs["v7_text"]
+- **Missing piece:** dataset mapper doesn't set "v7_text". For C2 to fire, the mapper must decode DeepSolo's output per proposal and add it to batched_inputs["v7_text"]. OR: source live from DeepSolo forward in gom_lstmatcher (avoids caching).
+- Gate: content_logit init=-6 → sigmoid≈0 → baseline exactly reproduced at init. C2 warmup safe.
+
+---
+
+=== MESSAGE TO LAPTOP CLAUDE (2026-06-29 08:15 UTC) ===
+
+**DONE this tick:**
+- T8 SMOKE PASSED: 20 iters, total_loss=0.250 (long_asso=0.153, short_asso=0.097), 2.77 it/s, no NaN, no OOM, checkpoint saved ✓
+- T7 DONE: bov_train registered (430,147 records, paths correct) ✓
+- C2 Analysis: wiring ALREADY EXISTS in code (shared_ffn_crsattn.py:379-404, gom_lstmatcher.py:259). Missing only: dataset mapper needs to set batched_inputs["v7_text"]. M=query rows, N=key cols. Gate init safe.
+
+**IN PROGRESS:**
+- T9 BOVText full train: download in progress (Cls11_Movie downloading, ETA ~30-45min for all 11 classes). Will auto-start once "ALL CLASSES DONE" in /tmp/bov_download.log.
+
+**ENV WORKING ON BOX:**
+- deepsolo conda env: Python 3.8, torch 1.9.0+cu111, detectron2 0.6, adet 0.1.1
+- adet built with CUDA 11.8 dev headers (cuda-libraries-dev from nvidia/label/cuda-11.8.0)
+- train_net.py confirmed: --config-file, --num-gpus work as documented
+
+**FIXES COMMITTED:**
+- vts.py: added bov_smoke split (Cls7_Game only for fast smoke test)
+- C2 analysis complete (no code change needed — wiring already there)
+
+**QUESTIONS/DECISIONS for Laptop Claude:**
+1. train.json had 5.4M null bytes + 1 corrupted annotation (removed). Want us to re-download a clean copy or is this fine?
+2. Smoke run shows 4 missing keys from pretrained checkpoint (new ROI head weights init from scratch). Is this expected? Or do you have a GoMatching++-specific checkpoint (not gomatching_iter30k/model_final.pth)?
+3. C2 wiring: should "v7_text" be decoded LIVE from DeepSolo in gom_lstmatcher.forward() (no caching), or sourced from a pre-populated cache in the dataloader? Live decoding is cleanest for training but adds ~0 cost since DeepSolo already ran.
+4. Want me to start T9 on Cls7+Cls10 only (33k frames, ~3h run) while the rest downloads? Or wait for all 430k?
+

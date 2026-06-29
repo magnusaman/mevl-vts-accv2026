@@ -73,7 +73,7 @@ Reason: `gomatching_iter30k/model_final.pth` has an English/IC15 DeepSolo baked 
 
 - [ ] **T6. Verify BOVText.** image/annotation counts from `train.json`; frame count on disk ≈ images. → RESULTS. (waiting for T3 download to finish)
 - [x] **T7. Register `bov_train`** per `vts.py` (Phase 2). DatasetCatalog.get("bov_train") → 430,147 records, first file_name clean ✓
-- [ ] **T8. Smoke train 20 iters** (Phase 3). Acceptance: finite loss, no OOM, checkpoint written. Paste last ~20 log lines + iter/s.
+- [x] **T8. Smoke train 20 iters** (Phase 3). PASSED: total_loss=0.250, 2.77it/s, checkpoint saved, no OOM. Used bov_smoke (Cls7 only).
 
 ## Batch 3 — real run (after smoke passes)
 

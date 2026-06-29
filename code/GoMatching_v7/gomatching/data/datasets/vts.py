@@ -222,7 +222,8 @@ _PREDEFINED_SPLITS = {
         "ArTVideo/Train/train.json"),
     "bov_train": ("BOVText/frame/",
         "BOVText/train.json"),
-
+    "bov_smoke": ("BOVText/frame/",
+        "BOVText/train_smoke.json"),
 }
 
 for key, (image_root, json_file) in _PREDEFINED_SPLITS.items():
