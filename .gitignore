@@ -29,6 +29,14 @@ checkpoints/
 datasets/
 data/
 **/frame/
+# Allow gomatching/data Python source (it's code, not a dataset dir)
+!**/gomatching/
+!**/gomatching/data/
+!**/gomatching/data/**
+!**/gomatching/data/datasets/
+!**/gomatching/data/datasets/**
+!**/gomatching/data/transforms/
+!**/gomatching/data/transforms/**
 *.mp4
 *.avi
 *.jpg

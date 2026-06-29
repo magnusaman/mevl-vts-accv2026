@@ -42,16 +42,16 @@ git push origin main   # should be non-interactive now
 
 ## Batch 1 — stand up + start the big download (do today)
 
-- [ ] **T1. Report the box.** `nvidia-smi`, `nproc`, `df -h ~`, `python --version`, `conda env list`. Confirm free disk ≥ ~300GB for BOVText frames. → RESULTS.
-- [ ] **T2. Modal auth.** Confirm `modal volume list` works on the box (Aman sets the token). If not, mark BLOCKED with the error.
-- [ ] **T3. Start BOVText pull in the background NOW** (risk #1, slow): `modal volume get mevl-vts-datasets /BOVText code/GoMatching_v7/datasets/BOVText` in tmux/nohup. Report start time + size as it grows. Don't wait on it — continue to T4.
-- [ ] **T4. Pull weights** (small): `modal volume get mevl-vts-weights /pretrained_models code/GoMatching_v7/pretrained_models` and `modal volume get mevl-vts-v7-checkpoints /gomatching_iter30k checkpoints/gomatching_iter30k`. Verify 4 `.pth` present. → RESULTS.
-- [ ] **T5. Build the `gom` conda env** (Phase 0 of RUNBOOK). Acceptance: `python -c "import torch, detectron2; print(torch.cuda.get_device_name(0))"` → `NVIDIA RTX A6000`. Record the exact torch/detectron2 versions that worked (Laptop Claude needs them).
+- [x] **T1. Report the box.** `nvidia-smi`, `nproc`, `df -h ~`, `python --version`, `conda env list`. Confirm free disk ≥ ~300GB for BOVText frames. → RESULTS.
+- [x] **T2. Modal auth.** Confirm `modal volume list` works on the box (Aman sets the token). If not, mark BLOCKED with the error.
+- [x] **T3. Start BOVText pull in the background NOW** (risk #1, slow): class-by-class via /tmp/download_bov.sh, ~1min/class, ETA 07:49→08:01Z. 745MB for Cls7_Game, expanding.
+- [x] **T4. Pull weights** (small): All 4 deepsolo_*.pth + gomatching_iter30k/model_final.pth ✓. Had to download individually (not as directory).
+- [x] **T5. Build the `gom` conda env** (Phase 0 of RUNBOOK). Used deepsolo env. torch 1.9.0+cu111, d2 0.6, adet 0.1.1 → NVIDIA RTX A6000 ✓. train_net.py --help works.
 
 ## Batch 2 — verify data + smoke (after T3 finishes)
 
-- [ ] **T6. Verify BOVText.** image/annotation counts from `train.json`; frame count on disk ≈ images. → RESULTS.
-- [ ] **T7. Register `bov_train`** per `vts.py` (Phase 2). Acceptance: `DatasetCatalog.get("bov_train")` returns records, first record prints clean.
+- [ ] **T6. Verify BOVText.** image/annotation counts from `train.json`; frame count on disk ≈ images. → RESULTS. (waiting for T3 download to finish)
+- [x] **T7. Register `bov_train`** per `vts.py` (Phase 2). DatasetCatalog.get("bov_train") → 430,147 records, first file_name clean ✓
 - [ ] **T8. Smoke train 20 iters** (Phase 3). Acceptance: finite loss, no OOM, checkpoint written. Paste last ~20 log lines + iter/s.
 
 ## Batch 3 — real run (after smoke passes)
