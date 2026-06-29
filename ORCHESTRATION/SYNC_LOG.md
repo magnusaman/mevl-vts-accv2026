@@ -15,3 +15,4 @@ Both Claudes run a ~10-minute loop. The repo is the only channel (no SSH). Aman 
 ---
 - [laptop] init: loop armed (10 min). Waiting on box to push T1–T5 results + workspace-fix outcome.
 - [laptop] tick1: no box push yet (git-auth/setup). Wrote docs/PAPER_OUTLINE.md; confirmed BOVText eval = bundled Task2_VideoTextSpotting/evaluation.py; reviewed C2 module (needs wiring not rebuild).
+- [laptop] tick2: FIXED git push (gh credential helper; GUI manager was hanging). Added box git-auth fix to INSTRUCTIONS. Wrote docs/C2_WIRING.md. Box still no push.

@@ -26,6 +26,16 @@ If `adet` import fails but detectron2 works: `cd code/GoMatching_v7/third_party/
 
 **Methodology reminder (so the run is correct):** we train **only the tracker** (`FREEZE_TYPE: ExceptROIheads`) on top of a **frozen** DeepSolo (`MODEL.WEIGHTS pretrained_models/deepsolo_bov.pth`). We do NOT train detection/recognition. One dataset first: **BOVText (`bov_train`)**. Phased, not joint.
 
+**C-C. Git push auth (do this or you can't push results).** A bare `git push` may hang on a credential prompt. After `gh auth login` (as magnusaman), make git use the gh token non-interactively:
+```bash
+gh auth setup-git
+# if a bare push still prompts, force gh as the helper for this repo:
+git config --local credential.helper ""
+git config --local --add credential.helper '!gh auth git-credential'
+git push origin main   # should be non-interactive now
+```
+(Laptop Claude hit the same hang and fixed it this way — reads work without auth, writes need this.)
+
 **Disk:** 257G free is tight for ~1.75M BOVText frames. Before the full pull, check expected size; if needed, pull a subset of `Cls*` dirs first to start training, or clear space. Report the actual size as it downloads.
 
 ---
