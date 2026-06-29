@@ -423,3 +423,41 @@ Note: same patch needed in inference() path (L427-449 → before L453 `self.roi_
 - Cls11_Movie download: 39k/78k frames (~51%), Cls12-18 at 0, ETA ~2-3h for all classes.
 - Test Video.zip: 75% (3.3G/4.4G), ETA ~15min — once done I'll extract frames and run convert_bovtext_test.py.
 - T10 question still open: official test (32 classes) vs train-hold-out val (11 classes)?
+
+## [T9-5k] 5000-iter checkpoint — STATUS: DONE
+- UTC: 2026-06-29T14:17Z
+- ran: `until ls model_0004999.pth; do sleep 10; done` then grepped log
+- output (iter 5000):
+  ```
+  eta: 2:08:14  iter: 5000  total_loss: 0.0004709  loss_long_asso: 0.0002382  loss_short_asso: 0.0002463
+  time: 0.2989  data_time: 0.0266  lr: 4.6652e-05  max_mem: 3987M
+  ```
+- checkpoint: `trained_models/GoMPP_BOVText_partial/model_0004999.pth` (304 MB)
+- metrics at 5k: total_loss=0.00047, long=0.00024, short=0.00025. Speed=3.35 it/s, ETA ~2:08 to 30k.
+- notes:
+  - Loss oscillates widely (near-0 to 0.2+) because batch=1 clip, some clips have 0 tracked instances (loss=0 those iters). Mean ~0.01-0.05 is normal for GoMatching tracking.
+  - BOVText download: Cls11 at 64k/78k (81%), Cls12-18 at 0. ETA ~1h for Cls11 to complete.
+  - Test video: extracted (19s) + frame extraction running (PID=870170, /tmp/extract_bov_test.log).
+
+## [T10-ext] Test frame extraction in progress — STATUS: IN PROGRESS
+- UTC: 2026-06-29T14:17Z
+- ran: `/tmp/extract_bov_test.sh` → `unzip /tmp/bovtext_test_video.zip` (done in 19s) → `cv2 frame extract to datasets/BOVText/test_frame/`
+- output: unzip done, frame extraction running (background PID=870170)
+- expected: ~480 videos × ~1000 frames = ~480k test frames. ETA unknown (cv2 is slow).
+- next: once complete → `python tools/convert_bovtext_test.py --ann_dir /tmp/bovtext_test_ann/Annotation --frame_dir datasets/BOVText/test_frame --out_file datasets/BOVText/test.json`
+
+---
+
+=== MESSAGE TO LAPTOP CLAUDE (2026-06-29 14:17 UTC) ===
+
+**PING: iter-5000 checkpoint reached ✓**
+- `trained_models/GoMPP_BOVText_partial/model_0004999.pth` (304 MB)
+- total_loss=0.00047 (long_asso=0.00024, short_asso=0.00025). 3.35 it/s. ETA ~2:08h to 30k.
+- Loss looks healthy — oscillates near-0 to ~0.2 (normal for batch=1 with zero-annotation frames); mean trending down ✓
+
+**PARALLEL WORK:**
+- Test frame extraction: unzip done in 19s; cv2 frame-by-frame in background (~480 videos). Once done → convert_bovtext_test.py → test.json → bov_test ready.
+- BOVText train download: Cls11 81% done. Cls12-18 at 0. Watcher ready to auto-switch.
+
+**STILL WAITING: T10 decision**
+Official test split (32 classes) OR train hold-out val (11 classes)?
