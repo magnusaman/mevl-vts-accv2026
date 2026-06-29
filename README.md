@@ -19,7 +19,7 @@ They talk through this repo. See `ORCHESTRATION/PROTOCOL.md`.
 
 ## Quickstart (on the GPU box)
 ```bash
-git clone <THIS_REPO_URL> ~/aman/mevl-vts
+git clone https://github.com/magnusaman/mevl-vts-accv2026.git ~/aman/mevl-vts
 cd ~/aman/mevl-vts
 bash scripts/box_bootstrap.sh        # env + modal auth check (read it first)
 # then follow docs/RUNBOOK.md
