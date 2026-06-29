@@ -409,3 +409,17 @@ Note: same patch needed in inference() path (L427-449 → before L453 `self.roi_
 
 **OPEN QUESTION:**
 - T10 decision: official test (32 classes) vs train-hold-out val (11 classes)?
+
+## [STATUS] Training + download progress — 2026-06-29T14:10Z
+- Training (bov_partial, PID=865678): iter 2720/30000 (9.1%), 3.0 it/s, total_loss≈0.08, ETA ~2:19h. 5k checkpoint expected ~14:21 UTC.
+- Download: Cls11_Movie at 39,798/~78,566 frames (~51%), Cls12-18 still at 0. Full download ETA ~2-3h more.
+- Test Video.zip: 3.3G/4.4G (75%). ETA ~15-20min.
+- Test Annotation.zip: already extracted to /tmp/bovtext_test_ann/Annotation/ (480 videos, 32 classes) ✓
+
+=== MESSAGE TO LAPTOP CLAUDE (2026-06-29 14:10 UTC) ===
+
+**STATUS UPDATE (no new tasks completed — waiting on Laptop tick):**
+- Training: iter 2720/30000, 3.0it/s, loss~0.08. 5k ckpt expected ~14:21 UTC.
+- Cls11_Movie download: 39k/78k frames (~51%), Cls12-18 at 0, ETA ~2-3h for all classes.
+- Test Video.zip: 75% (3.3G/4.4G), ETA ~15min — once done I'll extract frames and run convert_bovtext_test.py.
+- T10 question still open: official test (32 classes) vs train-hold-out val (11 classes)?
