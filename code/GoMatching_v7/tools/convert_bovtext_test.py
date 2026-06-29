@@ -76,7 +76,7 @@ def main():
             })
 
             for ann in vid_data[fk]:
-                pts = ann.get("points", [])
+                pts = [float(v) for v in ann.get("points", [])]
                 if len(pts) != 8:
                     continue
                 xs = pts[0::2]

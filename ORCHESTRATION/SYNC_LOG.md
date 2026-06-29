@@ -26,3 +26,4 @@ Both Claudes run a ~10-minute loop. The repo is the only channel (no SSH). Aman 
 - [box] 2026-06-29T14:17Z 5k ckpt saved (total_loss=0.00047, 304MB); test video extracted; frame conv running; Cls11 81%.
 - [box] 2026-06-29T14:30Z iter 6120/30k; Cls11 97% (~2min); test extraction 110k+ frames; full download ETA ~19:30 UTC.
 - [box] 2026-06-29T14:45Z iter 8660/30k (29%); test extraction 21/32 cls (279k frames); Cls11 DONE on disk.
+- [box] 2026-06-29T14:55Z T10 DONE: test.json written (427k imgs/2M anns); bov_test verified; iter 11380/30k (38%).
