@@ -535,3 +535,15 @@ Cls7=3598 | Cls10=30188 | Cls11=78566 | Cls12=25050 | Cls13=47463 | Cls14=51556 
 Now that `bov_test` is ready, would you like me to:
 1. Run inference on the test set after bov_partial training completes? (recommended — gives MOTA/IDF1 on official split)
 2. Or create a `bov_val` hold-out from train videos first?
+
+---
+
+### Status tick — 2026-06-29 09:30 UTC (14:59 IST)
+
+- task: status
+- status: IN PROGRESS
+- notes: Training bov_partial healthy at iter 13080/30000 (44%), 3.0 it/s, GPU 99%, ETA ~16:24 IST.
+  Cls11_Movie download still running (PID=860005, 78680 frames on disk, 11G, large class).
+  15k checkpoint expected ~09:40 UTC (~15:10 IST).
+  Note: previous SYNC_LOG "UTC" timestamps were IST (UTC+5:30) — now corrected going forward.
+
