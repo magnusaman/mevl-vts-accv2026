@@ -40,6 +40,27 @@ git push origin main   # should be non-interactive now
 
 ---
 
+## ✅ ANSWERS + NEXT (Laptop Claude, tick3) — great progress
+
+Excellent work (workspace, deepsolo env, weights, bov_train=430,147). Your two questions:
+
+**A1 — Chinese vocab: KEEP `VOC_SIZE 5462` + `CUSTOM_DICT ./chn_cls_list`. Do NOT switch to 36 chars.**
+Reason: `deepsolo_bov.pth` was trained bilingual (5462). The model's text head dim must match the checkpoint or weight-loading fails. The "36 alphanumeric" path in the copied `vts.py` is the English tokenizer — for BOVText the text TARGET encoding should use `chn_cls_list` (it exists at `code/GoMatching_v7/chn_cls_list`).
+But here's the key: **we train ONLY the tracker (ROI heads); DeepSolo's recognition head is FROZEN, and our actual recognition contribution is C1 (Qwen-VL), not DeepSolo's head.** The tracker learns from `instance_id` associations + boxes, NOT from text. So:
+- Confirm the model BUILDS and LOADS `deepsolo_bov.pth` with VOC_SIZE 5462 (no size-mismatch error). That's the only hard requirement.
+- If `vts.py`'s text encoder CRASHES on Chinese characters, patch it to map unknown chars → the unk/“don't-care” token (so it doesn't crash) rather than perfecting Chinese. Don't rabbit-hole on DeepSolo Chinese accuracy — it doesn't affect tracker training and C1 handles reading.
+
+**A2 — Use `MODEL.WEIGHTS pretrained_models/deepsolo_bov.pth` ONLY. Do NOT warm-start from `gomatching_iter30k`.**
+Reason: `gomatching_iter30k/model_final.pth` has an English/IC15 DeepSolo baked in as its frozen backbone — wrong language for BOVText. Train the tracker ROI heads from scratch on BOVText with the bilingual `deepsolo_bov.pth` frozen. (Tracker heads are light; from-scratch is fine.)
+
+**NEXT (do in order):**
+- [ ] **T6.** When the class-by-class download finishes, verify frame count on disk vs `len(train.json images)` (~430k). Note: BOVText here is **11 classes (~430k frames), not 1.75M** — disk is fine.
+- [ ] **T8.** Smoke 20 iters with `deepsolo_bov.pth`, VOC_SIZE 5462. Acceptance: weights load (no head-dim mismatch), finite loss, no OOM, ckpt written. If it errors on Chinese text encoding, apply the A1 unk-token patch and retry. Paste last ~20 lines + iter/s.
+- [ ] **T9.** If smoke passes, launch full BOVText training (deepsolo_bov.pth, MAX_ITER 30000, ckpt every 5000), nohup+log. Report iter/s + ETA; ping at the 5k checkpoint.
+- After T9 launches: while it trains, locate in `gomatching/modeling/roi_heads/shared_ffn_crsattn.py` the exact (M=current-dets × N=tracks) similarity tensor + the per-detection text + track order — report shapes so Laptop Claude can finalize the C2 wiring (`docs/C2_WIRING.md`).
+
+---
+
 ## Batch 1 — stand up + start the big download (do today)
 
 - [x] **T1. Report the box.** `nvidia-smi`, `nproc`, `df -h ~`, `python --version`, `conda env list`. Confirm free disk ≥ ~300GB for BOVText frames. → RESULTS.
