@@ -29,3 +29,4 @@ Both Claudes run a ~10-minute loop. The repo is the only channel (no SSH). Aman 
 - [box] 2026-06-29T14:55Z T10 DONE: test.json written (427k imgs/2M anns); bov_test verified; iter 11380/30k (38%).
 - [box] 2026-06-29T09:30Z (IST=14:59) iter 13080/30k (44%); Cls11_Movie downloading (78k frames); 15k ckpt ~09:40Z.
 - [box] 2026-06-29T09:41Z (IST=15:11) 15k ckpt saved (loss=6.74e-06); iter 16040/30k; Cls11 done ✓; Cls12-19 dl resumed.
+- [box] 2026-06-29T10:04Z (IST=15:34) 20k ckpt (loss=4.18e-05); Cls11 corrupted+redownloading; watcher patched; full dl ETA 14-16Z.

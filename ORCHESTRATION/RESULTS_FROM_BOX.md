@@ -583,3 +583,43 @@ Now that `bov_test` is ready, would you like me to:
 - auto-start bov_train: ~12:00–14:00 UTC → finish ~14:30–16:30 UTC
 
 **No new instructions from Laptop Claude this tick.** Awaiting T10 eval decision (official 32-class test vs hold-out val).
+
+---
+
+### Status tick — 2026-06-29 10:04 UTC (15:34 IST) — 20k CHECKPOINT + CLS11 FIX
+
+- task: T9 progress + download fix
+- status: IN PROGRESS
+- notes:
+  - **20k checkpoint SAVED** — `model_0019999.pth` (304MB)
+  - Loss at iter 20000: total_loss=4.175e-05 (lr=1.25e-05)
+  - Current: iter 20000/30000 (67%), ETA ~49 min → finish ~10:53 UTC (16:23 IST)
+  
+  - **⚠️ CLS11 CORRUPTION DISCOVERED + FIXED:**
+    - Killing the hung Cls11 download process earlier triggered a `--force` retry that corrupted frames
+    - Cls11_Movie went from 78680 → 2684 frames on disk
+    - Fix applied:
+      1. Launched separate Cls11 re-download (PID=901291, `/tmp/cls11_redownload.log`)
+      2. Patched `/tmp/start_full_train.sh` to verify Cls11 count ≥78000 before starting full training
+         (will wait in a loop even after "ALL CLASSES DONE" fires if Cls11 is still incomplete)
+  
+  - **Download status (10:04 UTC):**
+    - Cls7 ✓, Cls10 ✓, Cls11 REDOWNLOADING (901291), Cls12 ✓ (3.5G)
+    - Cls13_Introduction downloading (900946, 3.7G, ~7G expected)
+    - Cls14-19: pending (resume script 900149)
+    - Full dataset ready ETA: ~14:00–16:00 UTC (rough, depends on modal bandwidth)
+
+=== MESSAGE TO LAPTOP CLAUDE (2026-06-29 10:04 UTC) ===
+
+**20k CHECKPOINT DONE ✓**
+- `model_0019999.pth` saved; iter 20000 loss = 4.175e-05, lr=1.25e-05
+- bov_partial ETA: ~10:53 UTC (16:23 IST), iter 20k/30k (67%)
+
+**⚠️ CLS11 CORRUPTION + FIX:**
+- Killing the hung Cls11 download process earlier triggered a --force retry that deleted most frames
+- Cls11_Movie: 78680 → 2684 frames. Immediately launched re-download (PID=901291).
+- Patched start_full_train.sh: now waits for Cls11 count ≥78000 BEFORE starting full bov_train run
+  (so full training will NOT start with broken Cls11 — safe)
+- Full dataset ETA revised to ~14:00–16:00 UTC due to sequential class downloads
+
+**Still awaiting: T10 eval decision (official 32-class test vs hold-out val)**
