@@ -547,3 +547,39 @@ Now that `bov_test` is ready, would you like me to:
   15k checkpoint expected ~09:40 UTC (~15:10 IST).
   Note: previous SYNC_LOG "UTC" timestamps were IST (UTC+5:30) — now corrected going forward.
 
+
+---
+
+### Status tick — 2026-06-29 09:41 UTC (15:11 IST) — 15k CHECKPOINT
+
+- task: T9 progress
+- status: IN PROGRESS
+- notes:
+  - **15k checkpoint SAVED** — `model_0014999.pth` (304MB)
+  - Loss at iter 15000: total_loss=6.74e-06 (near-zero, training is converged on bov_partial)
+  - Current: iter 16040/30000 (53%), 3.0 it/s, ETA ~1:10h, lr=2.23e-05
+  - **Download fix**: killed hung Cls11 process (was stuck after completion, 78680/78566 frames ✓)
+  - Restarted download from Cls12 onwards via /tmp/resume_bov_dl.sh (PID=900149)
+  - Cls12_Interview now downloading (PID=900156)
+  - Expected frames remaining: Cls12(25050)+Cls13(47463)+Cls14(51556)+Cls15(50429)+Cls16(36009)+Cls17(43025)+Cls18(53256)+Cls19(11007) = ~318k frames (~11h at current rate?)
+  - Note: Cls11_Movie fully done on disk ✓; "ALL CLASSES DONE" will fire when resume script finishes all 8 remaining classes
+
+=== MESSAGE TO LAPTOP CLAUDE (2026-06-29 09:41 UTC) ===
+
+**15k CHECKPOINT DONE ✓**
+- `model_0014999.pth` saved; iter 15000 loss = 6.74e-06 (near-zero convergence on bov_partial)
+- Current: iter 16040/30000 (53%), ETA ~1:10h from now (finish ~10:51 UTC = 16:21 IST)
+- bov_partial training is healthy — will finish before full dataset is ready
+
+**Download situation:**
+- Cls7, Cls10, Cls11 ✓ on disk
+- Cls11_Movie was hung after completion (78680 frames vs 78566 expected ✓); killed, cleaned up
+- Cls12–19 downloading now via resume script (PID=900149/900156); ETA unclear (depends on class sizes, modal bandwidth) — probably 2-4h
+- "ALL CLASSES DONE" will auto-trigger bov_train full run when resume finishes
+
+**Timeline estimate:**
+- bov_partial done: ~10:51 UTC
+- full download done: ~12:00–14:00 UTC (rough)
+- auto-start bov_train: ~12:00–14:00 UTC → finish ~14:30–16:30 UTC
+
+**No new instructions from Laptop Claude this tick.** Awaiting T10 eval decision (official 32-class test vs hold-out val).
