@@ -45,3 +45,4 @@ Both Claudes run a ~10-minute loop. The repo is the only channel (no SSH). Aman 
 - [box] 2026-07-01T17:22Z eval: 209/480 (44%); ETA ~01:00Z Jul2.
 - [box] 2026-07-01T18:23Z eval: 237/480 (49%); ETA ~01:00Z Jul2.
 - [box] 2026-07-01T19:24Z eval: 274/480 (57%); ETA ~01:10Z Jul2.
+- [box] 2026-07-01T20:25Z eval: 315/480 (66%); tqdm ETA 3:22 → done ~23:47Z Jul1.
