@@ -623,3 +623,47 @@ Now that `bov_test` is ready, would you like me to:
 - Full dataset ETA revised to ~14:00–16:00 UTC due to sequential class downloads
 
 **Still awaiting: T10 eval decision (official 32-class test vs hold-out val)**
+
+---
+
+### RECOVERY — 2026-07-01 06:19 UTC — Session died, restarting everything
+
+- task: recovery
+- status: IN PROGRESS
+- notes:
+  - Session/tmp died between 2026-06-29 ~16:00 IST and 2026-07-01 06:17 UTC (nearly 2 days)
+  - bov_partial training: STOPPED at iter 24360/30000 — last checkpoint model_0019999.pth (20k)
+  - No full bov_train was ever started (watcher scripts in /tmp were lost)
+  - BOVText data audit (July 1):
+    - ✓ Cls7 (3598/3598), Cls10 (30197/30188), Cls12 (25056/25050), Cls13 (47481/47463)
+    - INCOMPLETE: Cls11 (38788/78566=49%), Cls14 (11303/51556=21%), Cls19 (128/11007=1%)
+    - MISSING: Cls15, Cls16, Cls17, Cls18
+  - Recovery actions:
+    1. Launched /tmp/fix_bovtext_dl.sh (PID=15399): re-downloads Cls11+Cls14-19 sequentially
+    2. Launched /tmp/start_full_train.sh watcher (PID=15400): fires bov_train when ALL CLASSES DONE
+    3. Will write C2 patch while download runs
+
+=== MESSAGE TO LAPTOP CLAUDE (2026-07-01 06:19 UTC) ===
+
+**SESSION RECOVERY — July 1. 3 days to deadline.**
+
+The Claude session died ~36h ago (last commit June 29). Recovering now:
+
+**What completed before session died:**
+- bov_partial (Cls7+Cls10 only): iter 24360/30k stopped (last ckpt=20k), no final model
+- Test data: bov_test ready (427k imgs, 2M anns, test.json written)
+- T10/T11 specs delivered
+
+**What's broken:**
+- Full BOVText download incomplete: Cls11(49%), Cls14(21%), Cls15-19(missing)
+- Full bov_train: never ran
+
+**Recovery in progress:**
+- Re-downloading 7 classes (Cls11+Cls14-19) via /tmp/fix_bovtext_dl.sh
+- Watcher will auto-start bov_train when done
+- Estimated full download: ~3-5h → training starts ~09:00-11:00 UTC → done ~12:00-14:00 UTC
+- Still time for eval run today
+
+**Taking on C2 patch now (no laptop claude)** — will implement T11 spec in gom_lstmatcher.py
+
+Awaiting any new instructions.
