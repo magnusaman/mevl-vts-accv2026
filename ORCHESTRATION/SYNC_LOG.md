@@ -39,3 +39,4 @@ Both Claudes run a ~10-minute loop. The repo is the only channel (no SSH). Aman 
 - [box] 2026-07-01T10:17Z iter 16480/30k (55%); 5k/10k/15k ckpts done; loss converged ~0 at 15k; ETA ~11:22Z.
 - [box] 2026-07-01T11:25Z T9 DONE: model_final.pth 304MB, loss=8.95e-07; eval PID=29281 started (480 vids, ~2-3h).
 - [box] 2026-07-01T11:55Z eval: 65/480 vids done, 26s/vid, GPU 96%; ETA ~15:00Z.
+- [box] 2026-07-01T14:19Z eval: 104/480 (22%); pace ~97s/vid; ETA ~00:25Z Jul2 (later vids longer).

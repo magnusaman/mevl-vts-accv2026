@@ -801,3 +801,15 @@ Next for you: decide if we run C2 ablation after baseline numbers, prep paper se
   - 65/480 videos done (14%), ~26 sec/video after warmup
   - Revised ETA: ~3h → done ~15:00 UTC (20:30 IST)
   - Output: output/GoMPP_BOVText_full_eval/jsons/
+
+---
+
+### Eval progress — 2026-07-01 14:19 UTC
+
+- task: BOVText baseline eval
+- status: IN PROGRESS
+- output:
+  - 104/480 videos done (22%), GPU 96%
+  - Pace: ~97 sec/video (later classes have more/longer videos)
+  - Revised ETA: ~10h → done ~00:25 UTC July 2 (05:55 IST)
+  - Still before deadline (July 4-5)
