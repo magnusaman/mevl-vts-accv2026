@@ -684,3 +684,19 @@ Awaiting any new instructions.
   - Config verified: FREEZE_TYPE=ExceptROIheads, VOC_SIZE=5462, deepsolo_bov.pth ✓, train.json=430k imgs ✓
   - ETA full training done: ~08:15+3h = ~11:15 UTC (16:45 IST) today
   - Plan: monitor download → confirm training start → watch 5k checkpoint → eval after done
+
+---
+
+### Status — 2026-07-01 07:50 UTC
+
+- task: download progress
+- status: IN PROGRESS  
+- notes:
+  - ✓ Cls11_Movie: DONE 06:49Z (78680 frames)
+  - ✓ Cls14_Talent: DONE 07:09Z (51587 frames)
+  - ✓ Cls15_Photograph: DONE 07:36Z (50443 frames)
+  - ⏳ Cls16_Government: 25249/36009 (70%), ETA ~07:56Z
+  - ⏳ Cls17_Speech: pending (~08:16Z)
+  - ⏳ Cls18_Travel: pending (~08:41Z)
+  - ⏳ Cls19_Fashion: pending (~08:46Z)
+  - Full download ETA: ~08:50 UTC → bov_train auto-starts → done ~11:50 UTC (17:20 IST)
