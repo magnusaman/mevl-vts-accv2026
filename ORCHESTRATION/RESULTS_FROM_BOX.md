@@ -813,3 +813,11 @@ Next for you: decide if we run C2 ablation after baseline numbers, prep paper se
   - Pace: ~97 sec/video (later classes have more/longer videos)
   - Revised ETA: ~10h → done ~00:25 UTC July 2 (05:55 IST)
   - Still before deadline (July 4-5)
+
+---
+
+### Eval progress — 2026-07-01 15:20 UTC
+
+- task: BOVText baseline eval — IN PROGRESS
+- 135/480 videos (28%); ~1.7 min/video (later classes up to ~10 min/video with 5800 frames)
+- ETA: ~01:00 UTC July 2
