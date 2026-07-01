@@ -667,3 +667,20 @@ The Claude session died ~36h ago (last commit June 29). Recovering now:
 **Taking on C2 patch now (no laptop claude)** — will implement T11 spec in gom_lstmatcher.py
 
 Awaiting any new instructions.
+
+---
+
+### Self-managed status — 2026-07-01 06:48 UTC — SOLE ORCHESTRATOR
+
+- task: download + training pipeline
+- status: IN PROGRESS
+- notes:
+  - **Loop stopped. Box Claude now sole orchestrator.**
+  - Download status (06:48 UTC):
+    - Cls11_Movie: 76757/78566 (97%) — finishing in ~2 min
+    - Cls14-19: sequential download after Cls11, ETA ~85 min
+    - Full download ETA: ~08:15 UTC (13:45 IST)
+  - Training will auto-start via /tmp/start_full_train.sh watcher when "ALL CLASSES DONE"
+  - Config verified: FREEZE_TYPE=ExceptROIheads, VOC_SIZE=5462, deepsolo_bov.pth ✓, train.json=430k imgs ✓
+  - ETA full training done: ~08:15+3h = ~11:15 UTC (16:45 IST) today
+  - Plan: monitor download → confirm training start → watch 5k checkpoint → eval after done
