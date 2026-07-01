@@ -714,3 +714,21 @@ Awaiting any new instructions.
   - ALL CLASSES DONE expected ~08:55Z → bov_train auto-starts
   - Training ETA done: ~08:55 + 3h = ~11:55 UTC (17:25 IST)
   - C2 patch committed (inactive; activates via COMP3_ENABLED=True in config)
+
+---
+
+### T9 FULL RUN LAUNCHED — 2026-07-01 08:50 UTC
+
+- task: T9 — full bov_train
+- status: IN PROGRESS
+- output:
+  - ALL CLASSES DONE: 08:49 UTC ✓ (all 11 classes verified on disk)
+  - Training launched: 08:50 UTC, PID=22976
+  - Dataset: bov_train (430,147 images, 2,380,083 anns)
+  - Weights: pretrained_models/deepsolo_bov.pth (bilingual, VOC_SIZE=5462)
+  - Config: FREEZE_TYPE=ExceptROIheads, MAX_ITER=30000, CHECKPOINT_PERIOD=5000
+  - Speed: 3.33 it/s, ETA 2h35m → done ~11:25 UTC (16:55 IST)
+  - GPU: 98% util, 9623MB/49140MB, 63°C
+  - Loss @ iter 40: 0 (expected — LR warmup from 9.96e-7)
+  - Log: ~/aman/train_full.log
+  - Output dir: trained_models/GoMPP_BOVText_full
