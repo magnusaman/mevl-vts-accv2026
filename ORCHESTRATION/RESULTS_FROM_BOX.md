@@ -746,3 +746,18 @@ Awaiting any new instructions.
   - Loss healthy (near-zero most iters, occasional spikes normal for asso training)
   - max_mem 3986M / 49140M — no OOM risk
   - GPU 98%, 63°C
+
+---
+
+### bov_train progress — 2026-07-01 10:17 UTC
+
+- task: T9 — full bov_train
+- status: IN PROGRESS
+- output:
+  - iter 16480/30000 (55%), 3.38 it/s, ETA ~1:05h → done ~11:22 UTC (16:52 IST)
+  - Checkpoints saved:
+    - 5k: total_loss=0.00916 (long=0.00774, short=0.000898)
+    - 10k: total_loss=0.00714 (long=0.00531, short=0.00183)
+    - 15k: total_loss=1.37e-05 (long=8.65e-06, short=5.07e-06) ← converged
+  - Loss trend: healthy convergence, near-zero by 15k
+  - No model_final.pth yet — still running
