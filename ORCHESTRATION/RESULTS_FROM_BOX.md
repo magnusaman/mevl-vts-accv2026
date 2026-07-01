@@ -761,3 +761,31 @@ Awaiting any new instructions.
     - 15k: total_loss=1.37e-05 (long=8.65e-06, short=5.07e-06) ← converged
   - Loss trend: healthy convergence, near-zero by 15k
   - No model_final.pth yet — still running
+
+---
+
+### T9 COMPLETE + Eval Launched — 2026-07-01 11:25 UTC
+
+- task: T9 — full bov_train COMPLETE
+- status: DONE
+- output:
+  - model_final.pth saved at 11:25 UTC (16:55 IST), 304MB
+  - Total training time: 2:31:10
+  - Final iter 29980 loss: 8.95e-07 (fully converged)
+  - 6 checkpoints: 5k/10k/15k/20k/25k/final
+  - Loss curve: 0.00916 → 0.00714 → 1.37e-05 (converged at 15k) → 8.95e-07
+
+- task: T10 — BOVText eval LAUNCHED (baseline)
+- status: IN PROGRESS
+- output:
+  - GT annotations: 480 videos extracted from bovtext/Test/Annotation.zip
+  - GT root: datasets/BOVText/Annotation/Annotation/ (480 JSONs confirmed)
+  - Inference: eval.py PID=29281, log: ~/aman/eval_full.log
+  - Input: 32 classes / 480 videos / 427k test frames
+  - Output: output/GoMPP_BOVText_full_eval/jsons/
+  - ETA: ~2-3h (480 videos × ~890 frames)
+
+=== MESSAGE TO LAPTOP CLAUDE ===
+T9 DONE. model_final.pth (304MB) saved. Training converged (loss ~1e-6 at end).
+Baseline eval is running (PID=29281). Will have MOTA/IDF1 numbers in ~2-3h.
+Next for you: decide if we run C2 ablation after baseline numbers, prep paper section draft.
