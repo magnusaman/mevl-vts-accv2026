@@ -163,6 +163,7 @@ class GoMatching(nn.Module):
         # ---------------- v7 DenseTrack components (opt-in) ----------------
         self.v7_proposal_augmenter = None
         self.v7_cfg = None
+        self._c2_ctlabels = None  # loaded lazily below if COMP3 enabled
         dt_cfg = getattr(self.cfg.MODEL, "DENSETRACK", None)
         if dt_cfg is not None and dt_cfg.ENABLED:
             self.v7_cfg = dt_cfg
@@ -174,8 +175,46 @@ class GoMatching(nn.Module):
                     max_sam_proposals_per_frame=dt_cfg.COMP1_MAX_PER_FRAME,
                 )
                 print(f"  [v7] enabled SAMProposalAugmenter")
+            if dt_cfg.COMP3_ENABLED:
+                # Load CTLABELS for live CTC decode (C2 text-as-identity)
+                import pickle
+                custom_dict = getattr(self.cfg.MODEL.TRANSFORMER, "CUSTOM_DICT", "")
+                voc_size = getattr(self.cfg.MODEL.TRANSFORMER, "VOC_SIZE", 37)
+                if custom_dict and voc_size > 37:
+                    try:
+                        with open(custom_dict, "rb") as fp:
+                            self._c2_ctlabels = pickle.load(fp)
+                        print(f"  [C2] loaded CTLABELS: {len(self._c2_ctlabels)} chars from {custom_dict}")
+                    except Exception as e:
+                        print(f"  [C2-WARN] could not load CTLABELS: {e}")
+                self._c2_voc_size = voc_size
 
         self.to(self.device)
+
+    def _c2_decode_det_texts(self, det_results):
+        """Decode DeepSolo recs (M_i, 25) int64 → list[list[str]], one per frame.
+        Returns None if CTLABELS not loaded (C2 disabled or dict missing)."""
+        if self._c2_ctlabels is None:
+            return None
+        ctlabels = self._c2_ctlabels
+        voc_size = self._c2_voc_size
+        frame_texts = []
+        for r in det_results:
+            texts = []
+            recs = r.recs.cpu().tolist() if r.has("recs") else []
+            for rec in recs:
+                last = "###"
+                s = ""
+                for c in rec:
+                    if c < voc_size - 1:
+                        if last != c:
+                            s += str(chr(ctlabels[c])) if isinstance(ctlabels[c], int) else str(ctlabels[c])
+                            last = c
+                    else:
+                        last = "###"
+                texts.append(s if s else "###")
+            frame_texts.append(texts)
+        return frame_texts
 
     def _v7_set_roi_ctx(self, batched_inputs):
         """Hand encoder features + SAM proposals + frame metadata to the matcher
@@ -359,6 +398,13 @@ class GoMatching(nn.Module):
             proposal.query_features = results_per_image.query_features
             det_proposals.append(proposal)
 
+        # ---------------- C2: live-decode DeepSolo text → frame_texts ----------------
+        _c2_texts = self._c2_decode_det_texts(det_results)
+        if (_c2_texts is not None
+                and hasattr(self.roi_heads, "_v7_ctx")
+                and self.roi_heads._v7_ctx is not None):
+            self.roi_heads._v7_ctx["frame_texts"] = _c2_texts
+
         # ---------------- v7 Component 1: SAM-augmented proposal recall ----------------
         if (self.v7_proposal_augmenter is not None
                 and hasattr(self.roi_heads, "_v7_ctx")
@@ -447,6 +493,15 @@ class GoMatching(nn.Module):
                 for k, v in fields.items():
                     proposal.set(k, v)
             det_proposals.append(proposal)
+
+        ### C2: inject live-decoded texts for inference
+        _c2_texts = self._c2_decode_det_texts(det_results)
+        if (_c2_texts is not None
+                and hasattr(self.roi_heads, "_v7_ctx")
+                and self.roi_heads._v7_ctx is not None):
+            self.roi_heads._v7_ctx["frame_texts"] = _c2_texts
+        elif _c2_texts is not None:
+            self.roi_heads._v7_ctx = {"frame_texts": _c2_texts, "image_size": (images.tensor.shape[-2], images.tensor.shape[-1])}
 
         ### matching
         start = time.time()
