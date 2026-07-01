@@ -732,3 +732,17 @@ Awaiting any new instructions.
   - Loss @ iter 40: 0 (expected — LR warmup from 9.96e-7)
   - Log: ~/aman/train_full.log
   - Output dir: trained_models/GoMPP_BOVText_full
+
+---
+
+### bov_train progress — 2026-07-01 09:31 UTC
+
+- task: T9 — full bov_train
+- status: IN PROGRESS
+- output:
+  - iter 7340/30000 (24%), 3.37 it/s, ETA ~1:54h → done ~11:25 UTC (16:55 IST)
+  - **5k checkpoint saved** (model_0004999.pth, 14:49 IST)
+    - total_loss=0.00916, loss_long_asso=0.00774, loss_short_asso=0.000898
+  - Loss healthy (near-zero most iters, occasional spikes normal for asso training)
+  - max_mem 3986M / 49140M — no OOM risk
+  - GPU 98%, 63°C

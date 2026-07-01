@@ -35,3 +35,4 @@ Both Claudes run a ~10-minute loop. The repo is the only channel (no SSH). Aman 
 - [box] 2026-07-01T07:50Z Cls11/14/15 done; Cls16 70%; ETA full dl ~08:50Z; training start ~08:50Z; done ~11:50Z.
 - [box] 2026-07-01T08:40Z 9/11 cls done; Cls18 81%; training starts ~08:55Z; C2 patch committed.
 - [box] 2026-07-01T08:50Z ALL CLASSES DONE ✓; bov_train LAUNCHED PID=22976 (3.33it/s, ETA 11:25Z, GPU 98%).
+- [box] 2026-07-01T09:31Z iter 7340/30k; 5k ckpt saved (loss=0.00916); ETA ~11:25Z.
