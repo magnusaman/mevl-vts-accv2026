@@ -789,3 +789,15 @@ Awaiting any new instructions.
 T9 DONE. model_final.pth (304MB) saved. Training converged (loss ~1e-6 at end).
 Baseline eval is running (PID=29281). Will have MOTA/IDF1 numbers in ~2-3h.
 Next for you: decide if we run C2 ablation after baseline numbers, prep paper section draft.
+
+---
+
+### Eval progress — 2026-07-01 11:55 UTC
+
+- task: BOVText baseline eval
+- status: IN PROGRESS
+- output:
+  - eval.py running (PID=29668), GPU 96%, 3.2GB VRAM
+  - 65/480 videos done (14%), ~26 sec/video after warmup
+  - Revised ETA: ~3h → done ~15:00 UTC (20:30 IST)
+  - Output: output/GoMPP_BOVText_full_eval/jsons/
