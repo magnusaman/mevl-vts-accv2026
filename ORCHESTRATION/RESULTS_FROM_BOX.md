@@ -700,3 +700,17 @@ Awaiting any new instructions.
   - ⏳ Cls18_Travel: pending (~08:41Z)
   - ⏳ Cls19_Fashion: pending (~08:46Z)
   - Full download ETA: ~08:50 UTC → bov_train auto-starts → done ~11:50 UTC (17:20 IST)
+
+---
+
+### Status — 2026-07-01 08:40 UTC
+
+- task: download progress
+- status: IN PROGRESS
+- notes:
+  - ✓ 9/11 classes complete: Cls7, Cls10, Cls11, Cls12, Cls13, Cls14, Cls15, Cls16, Cls17
+  - ⏳ Cls18_Travel: 43162/53256 (81%), ETA ~08:49Z
+  - ⏳ Cls19_Fashion: pending after Cls18, ETA ~08:53Z
+  - ALL CLASSES DONE expected ~08:55Z → bov_train auto-starts
+  - Training ETA done: ~08:55 + 3h = ~11:55 UTC (17:25 IST)
+  - C2 patch committed (inactive; activates via COMP3_ENABLED=True in config)

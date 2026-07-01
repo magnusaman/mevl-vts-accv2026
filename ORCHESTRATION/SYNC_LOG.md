@@ -33,3 +33,4 @@ Both Claudes run a ~10-minute loop. The repo is the only channel (no SSH). Aman 
 - [box] 2026-07-01T06:19Z RECOVERY: session died; bov_partial at 24360/30k (20k ckpt); BOVText 4/11 cls done; redownloading 7 cls; full training watcher armed.
 - [box] 2026-07-01T06:48Z SOLE ORCHESTRATOR: loop stopped; Cls11 97%; full dl ETA ~08:15Z; full bov_train auto-starts then; done ~11:15Z.
 - [box] 2026-07-01T07:50Z Cls11/14/15 done; Cls16 70%; ETA full dl ~08:50Z; training start ~08:50Z; done ~11:50Z.
+- [box] 2026-07-01T08:40Z 9/11 cls done; Cls18 81%; training starts ~08:55Z; C2 patch committed.
