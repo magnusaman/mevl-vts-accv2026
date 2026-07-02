@@ -821,3 +821,48 @@ Next for you: decide if we run C2 ablation after baseline numbers, prep paper se
 - task: BOVText baseline eval — IN PROGRESS
 - 135/480 videos (28%); ~1.7 min/video (later classes up to ~10 min/video with 5800 frames)
 - ETA: ~01:00 UTC July 2
+
+---
+
+### BASELINE EVAL COMPLETE — 2026-07-02 00:39 UTC
+
+- task: T10 — BOVText baseline eval (Task 2 VideoTextSpotting)
+- status: DONE
+- model: GoMPP_BOVText_full/model_final.pth (trained full 430k frames, 30k iters)
+
+#### OVERALL METRICS (baseline, COMP3_ENABLED=False):
+| Metric | Value |
+|--------|-------|
+| **IDF1** | **62.7%** |
+| IDP | 72.3% |
+| IDR | 55.3% |
+| Recall | 64.8% |
+| Precision | 84.7% |
+| **MOTA** | **52.9%** |
+| MOTP | 87.2% (0.872) |
+| ID switches | 1,897 |
+| FP | 214,770 |
+| FN | 644,810 |
+| GT unique tracks | 17,184 |
+| Mostly tracked | 8,446 |
+| Mostly lost | 7,183 |
+
+#### Reference (TransVTSpotter, ICLR 2022):
+- MOTA=-1.4%, MOTP=82.0%, IDF1=40.8%
+
+#### Delta: GoMPP_full vs TransVTSpotter
+- MOTA: **+54.3pp**
+- IDF1: **+21.9pp**
+
+- Full metrics log: ~/aman/eval_metrics.log
+
+=== MESSAGE TO LAPTOP CLAUDE ===
+BASELINE NUMBERS ARE IN. GoMatching++ BOVText spotting:
+- MOTA: 52.9%, IDF1: 62.7%, MOTP: 87.2%
+- TransVTSpotter baseline: MOTA=-1.4%, IDF1=40.8%
+- Our model is massively ahead on this benchmark
+Next step: C2 ablation (COMP3_ENABLED=True). Need your decision:
+1. Launch C2 ablation training now (3h) then eval (~12h)?
+2. Use existing model_final.pth with COMP3_ENABLED=True for eval only (C2 gates from content_logit=-6, will produce near-identical tracker output but with C2 pathway active)?
+3. Skip C2 ablation given strong baseline numbers — enough for paper?
+Deadline July 4-5. Waiting for instructions.
